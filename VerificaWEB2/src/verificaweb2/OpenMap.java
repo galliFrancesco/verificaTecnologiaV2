@@ -29,7 +29,6 @@ public class OpenMap {
     }
 
     /**
-     *
      * @param azione(String) -> Località da cercare nella query
      */
     public void run(String azione) throws MalformedURLException, IOException, SAXException, ParserConfigurationException {
@@ -72,10 +71,10 @@ public class OpenMap {
 
             Element e = (Element) nodelist.item(0);
 
-            System.out.println(e.getAttribute("lat"));
-            System.out.println(e.getAttribute("lon"));
-            String lat = e.getAttribute("lat");
-            String longi = e.getAttribute("lon");
+            //System.out.println(e.getAttribute("lat"));
+            //System.out.println(e.getAttribute("lon"));
+            //String lat = e.getAttribute("lat");
+            //String longi = e.getAttribute("lon");
             // Prende gli attributi di <place> e ne prende la latitudine e la longitudine
 
             //System.out.println(e.getAttribute("lat"));                   
@@ -89,10 +88,16 @@ public class OpenMap {
         }
         
         //// TODO: IMPOSTARE CHE RESTITUISCE UN VETTORE DI PLACES 
+        //// MA IN QUESTO PRENDE SOLO IL PRIMO 
+        //// TODO: CONTROLLARE SE ESISTE TOWN O ALTRO 
     }
 
+    /**
+     * @brief Imposta gli spazi e mette in coda le cose di cui ho bisogno(&format=xml&addressdetails=1)
+     * @param s(String) -> Input dell'utente sulla tappa
+     * @return Stringa pronta per la query
+     */
     private String modifica(String s) {
-        // Imposta gli spazi e mette in coda le cose di cui ho bisogno 
         s = s.replaceAll(" ", "+");
         s += "&format=xml&addressdetails=1";
 
