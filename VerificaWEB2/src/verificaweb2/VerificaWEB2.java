@@ -17,6 +17,7 @@ public class VerificaWEB2 {
         OpenMap mappa = new OpenMap(); 
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
         Utente ut = new Utente();
+        WebService ws = new WebService(); 
 
         int c = 0; // scleta
         System.out.println("\n 0. Registrazione \n 1.login");
@@ -32,6 +33,9 @@ public class VerificaWEB2 {
             case 0: // Registrazione
                 ut.setMail(mail);
                 ut.setPass(pass);
+                
+                String res = ws.register(mail, pass);
+                System.out.println(res);
 
                 break;
             case 1:// Login 
@@ -39,8 +43,8 @@ public class VerificaWEB2 {
                 break;
         }
         
-        String tappa = setTappa(); 
-        mappa.run(tappa); 
+        //String tappa = setTappa(); 
+        //mappa.run(tappa); 
         // una volta finito c'è la cosa delle sclete
     }
     

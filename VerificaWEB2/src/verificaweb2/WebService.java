@@ -22,6 +22,12 @@ import org.json.JSONObject;
  */
 public class WebService {
     
+    String host_cattedra = "http://172.16.102.100/"; 
+    
+    public WebService(){
+    
+    }
+    
     
     /**
      * EX: http://HOST_CATTEDRA/SaveStrings/register.php?username=aaa&password=bbb
@@ -34,14 +40,31 @@ public class WebService {
      */
     public String register(String username, String password) throws MalformedURLException, IOException{
         
-        String URLBase = "http://HOST_CATTEDRA/SaveStrings/register.php?username="; 
+        String URLBase = host_cattedra + "SaveStrings/register.php?username="; 
         String webRequest = URLBase + username + "&password=" + password; // url completo  
         
         URL request = new URL(webRequest); 
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
         
+        // JSON
+        String jsonString = result; //assign your JSON String here
+        JSONObject obj = new JSONObject(jsonString);
         
-        return ""; 
+        String oggetto = obj.getString("status");
+        if(!oggetto.equals("ok")){
+            // allora non si può registrare
+            return obj.getString("message"); 
+        } else {
+            // si può registrare
+            //return obj.get("Result").toString();
+            return "Utente Registrato :D";
+        }
+        
+        /** JSON FORMAT ? 
+         * {"STATUS":OK, "RESULT":"quello che ti serve"}
+         * 
+         * {"STATUS":ERROR, "MESSAGE":"bibo"}
+         */ 
     }
     
     /**
@@ -53,7 +76,8 @@ public class WebService {
      * 
      * @throws java.net.MalformedURLException 
      */
-    public String getToken(String username, String password) throws MalformedURLException, IOException{
+    /*
+    public Risposta getToken(String username, String password) throws MalformedURLException, IOException{
         
         String URLBase = "http://HOST_CATTEDRA/SaveStrings/register.php?username="; 
         String webRequest = URLBase + username + "&password=" + password; // url completo  
@@ -61,8 +85,8 @@ public class WebService {
         URL request = new URL(webRequest); 
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
         
-        return result; // CHIEDERE SE ARRIVA COME JSON
-    }
+        //return result; // CHIEDERE SE ARRIVA COME JSON
+    }*/
     
     public void setString(){
     
@@ -78,32 +102,5 @@ public class WebService {
     
     public void getKeys(){
     
-    }
-    
-    private String status(String Json){
-    
-        // JSON
-        String jsonString = Json; //assign your JSON String here
-        JSONObject obj = new JSONObject(jsonString);
-        
-        //JSONObject status = obj.getJSONObject("Status"); // prende lo stato 
-        
-        String oggetto = obj.getString("Status");
-        if(!oggetto.equals("OK")){
-            // allora non si può registrare
-            Json = obj.getString("Message"); 
-        } else {
-            // si può registrare
-        }
-        
-        
-        /** JSON FORMAT ? 
-         * {"STATUS":OK, "RESULT":"quello che ti serve"}
-         * 
-         * {"STATUS":ERROR, "MESSAGE":"bibo"}
-         * 
-         */
-     
-        return Json;    
     }
 }
