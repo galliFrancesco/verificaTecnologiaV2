@@ -12,12 +12,13 @@ import org.xml.sax.SAXException;
  */
 public class VerificaWEB2 {
    
+
     public static void main(String[] args) throws IOException, MalformedURLException, SAXException, ParserConfigurationException {
+        Risposta r; 
         Place posti = new Place(); 
         OpenMap mappa = new OpenMap(); 
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
         Utente ut = new Utente();
-        WebService ws = new WebService(); 
 
         int c = 0; // scleta
         System.out.println("\n 0. Registrazione \n 1.login");
@@ -34,11 +35,22 @@ public class VerificaWEB2 {
                 ut.setMail(mail);
                 ut.setPass(pass);
                 
-                String res = ws.register(mail, pass);
+                String res = WebService.register(mail, pass);
                 System.out.println(res);
-
+                
+                r = WebService.getToken(mail, pass);
+                
+                if(r.getStato())
+                    System.out.println(r.getDato()); // <- Token 
+                
                 break;
             case 1:// Login 
+                
+                r = WebService.getToken(mail, pass);
+                
+                if(r.getStato())
+                    System.out.println(r.getDato()); // <- Token 
+                
                 
                 break;
         }

@@ -22,13 +22,7 @@ import org.json.JSONObject;
  */
 public class WebService {
 
-    Risposta r;
-
-    String host_cattedra;
-
-    public WebService() {
-        host_cattedra = "http://172.16.102.100/";
-    }
+    static String host_cattedra = "http://172.16.102.100/";
 
     /**
      * EX:
@@ -41,7 +35,7 @@ public class WebService {
      *
      * @throws java.net.MalformedURLException
      */
-    public String register(String username, String password) throws MalformedURLException, IOException {
+    static public String register(String username, String password) throws MalformedURLException, IOException {
 
         String URLBase = host_cattedra + "SaveStrings/register.php?username=";
         String webRequest = URLBase + username + "&password=" + password; // url completo  
@@ -78,57 +72,59 @@ public class WebService {
      *
      * @param username
      * @param password
+     * @param r
      *
      * @throws java.net.MalformedURLException
      */
-    public Risposta getToken(String username, String password, Risposta r) throws MalformedURLException, IOException {
+    static public Risposta getToken(String username, String password) throws MalformedURLException, IOException {
 
-        r = new Risposta();
-        
-        String URLBase = "http://HOST_CATTEDRA/SaveStrings/register.php?username=";
+        Risposta r = new Risposta();
+
+        String URLBase = host_cattedra + "SaveStrings/getToken.php?username=";
         String webRequest = URLBase + username + "&password=" + password; // url completo  
 
         URL request = new URL(webRequest);
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
-        
+
         // {"status":"ok","result":{"token":"85456c36ea2b1f513cf5d708fa6d336d"}}
         // {"status":"error","message":"username o password errati"}
-        
         // JSON <- Lo faccio qui, perchè ognuno ha una propria risposta
         String jsonString = result; //assign your JSON String here
         JSONObject obj = new JSONObject(jsonString);
-        
-        
+
         String oggetto = obj.getString("status");
+
         if (!oggetto.equals("ok")) {
             // allora non ritorna il token     
             r.setStato(false);
             r.setDato(obj.getString("message"));
-            
-            
-            
+
         } else {
             // Ritorna il token
             //return obj.get("Result").toString();
             //return "Utente Registrato :D";
+            JSONObject jResult = obj.getJSONObject("result");
+
+            r.setStato(true);
+            r.setDato(jResult.getString("token"));
         }
-        
+
         return r;
     }
 
-    public void setString() {
+    static public void setString() {
 
     }
 
-    public void getString() {
+    static public void getString() {
 
     }
 
-    public void deleteString() {
+    static public void deleteString() {
 
     }
 
-    public void getKeys() {
+    static public void getKeys() {
 
     }
 }
