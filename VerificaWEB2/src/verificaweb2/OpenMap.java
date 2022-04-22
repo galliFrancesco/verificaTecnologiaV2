@@ -69,8 +69,8 @@ public class OpenMap {
             int numNode = nodelist.getLength();
             System.out.println("Ho degli elementi: " + numNode);
 
-            Element e = (Element) nodelist.item(0);
-
+            Element e = (Element) nodelist.item(0); // <- prende il primo elemento 
+ 
             //System.out.println(e.getAttribute("lat"));
             //System.out.println(e.getAttribute("lon"));
             //String lat = e.getAttribute("lat");
