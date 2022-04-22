@@ -11,16 +11,15 @@ import org.xml.sax.SAXException;
  * @author galliFrancesco
  */
 public class VerificaWEB2 {
-   
 
     public static void main(String[] args) throws IOException, MalformedURLException, SAXException, ParserConfigurationException {
-        Risposta r; 
-        Place posti = new Place(); 
-        OpenMap mappa = new OpenMap(); 
+        Risposta r;
+        Place posti = new Place();
+        OpenMap mappa = new OpenMap();
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
         Utente ut = new Utente();
 
-        int c = 0; // scleta
+        int c = 0; // scelta
         System.out.println("\n 0. Registrazione \n 1.login");
         c = myObj.nextInt();
 
@@ -34,40 +33,68 @@ public class VerificaWEB2 {
             case 0: // Registrazione
                 ut.setMail(mail);
                 ut.setPass(pass);
-                
+
                 String res = WebService.register(mail, pass);
                 System.out.println(res);
-                
+
                 r = WebService.getToken(mail, pass);
-                
-                if(r.getStato())
+
+                if (r.getStato()) {
                     System.out.println(r.getDato()); // <- Token 
-                
+                }
                 break;
             case 1:// Login 
-                
+
                 r = WebService.getToken(mail, pass);
-                
-                if(r.getStato())
-                    System.out.println(r.getDato()); // <- Token 
-                
-                
+
+                if (r.getStato()) {
+                    // Imposta il token    
+                } else {
+                    System.out.println(r.getDato()); // <- Errore 
+                }
+
                 break;
         }
-        
-        //String tappa = setTappa(); 
-        //mappa.run(tappa); 
-        // una volta finito c'è la cosa delle sclete
+
+        do {
+
+            System.out.println("\n 1. Inserisci tappa \n 2. Visualizza lista tappe \n 3. Rimuovi tappa\n 4. Inverti tappe\n 5. Calcola distanza itinerario\n 6. Cancella itinerario\n 0. Esci");
+            c = myObj.nextInt();
+
+            switch (c) {
+                case 1: // inserisci tappa
+
+                    String tappa = setTappa(); 
+                    mappa.run(tappa); 
+                    
+                    
+                    // una volta finito c'è la cosa delle sclete
+                    break;
+                case 2: // visualizza tappe
+                    break;
+                case 3: // rimuovi tappa
+                    break;
+                case 4: // inverti tappa
+                    break;
+                case 5: // calcola distanza itinerario 
+                    break;
+                case 6: // cancella itinerario 
+                    break;
+                case 0: // esci 
+                    break;
+            }
+        } while (c != 0);
+
     }
-    
-    private static String setTappa(){
-        
+
+    private static String setTappa() {
+
         // chiede all'utente una tappa
         System.out.println("Tappa?");
-        Scanner myObj = new Scanner(System.in); 
-        String tappa = myObj.nextLine(); 
-        
-        return tappa;        
+        Scanner myObj = new Scanner(System.in);
+        String tappa = myObj.nextLine();
+
+        return tappa;
     }
 
 }
