@@ -49,7 +49,7 @@ public class VerificaWEB2 {
 
                 ut.setMail(mail);
                 ut.setPass(pass);
-                
+
                 r = WebService.getToken(mail, pass);
 
                 if (r.getStato()) {
@@ -72,16 +72,30 @@ public class VerificaWEB2 {
                 case 1: // inserisci tappa
                     //String tappa = setTappa();
                     //mappa.run(tappa);
-                    r = WebService.setString(ut.getToken());                    
+                    r = WebService.setString(ut.getToken());
                     //System.out.println(r.getDato());
 
                     break;
                 case 2: // visualizza tappe
-                    
+
                     WebService.getString(ut.getToken());
-                    
+
                     break;
                 case 3: // rimuovi tappa
+                    
+                    System.out.println("Numero della tappa da togliere?");              
+                    
+                    int num = 0;
+                    
+                    num = myObj.nextInt();
+                    r = WebService.deleteString(ut.getToken(), num);
+                    
+                    if(r.getStato()){
+                        System.out.println("Tappa eliminata");
+                    } else {
+                        System.out.println("Errore"); 
+                    }
+                    
                     break;
                 case 4: // inverti tappa
                     break;

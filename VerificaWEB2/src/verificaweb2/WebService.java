@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
 
@@ -25,6 +26,7 @@ public class WebService {
     static String host_cattedra = "https://savestrings.netsons.org/SaveStrings/";
     static int count = 0;
 
+    
     /**
      * EX:
      * http://HOST_CATTEDRA/SaveStrings/register.php?username=aaa&password=bbb
@@ -67,6 +69,7 @@ public class WebService {
          */
     }
 
+    
     /**
      * EX:
      * http://HOST_CATTEDRA/SaveStrings/getToken.php?username=aaa&password=bbb
@@ -115,6 +118,7 @@ public class WebService {
         return r;
     }
 
+    
     /**
      * EX:
      * https://savestrings.netsons.org/SaveStrings/getString.php?token=e5493a6f14a9ab8656163d431f9130c9&key=0&string=ciao
@@ -161,6 +165,7 @@ public class WebService {
         return r;
     }
 
+    
     /**
      * EX:
      * https://savestrings.netsons.org/SaveStrings/getString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
@@ -195,16 +200,17 @@ public class WebService {
                 // tutto a posto
 
                 JSONObject jResult = obj.getJSONObject("result");
-                System.out.println(i + ": " + jResult.getString("string"));
+                System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"));
 
             }
 
         }
     }
 
+    
     /**
      * EX:
-     * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=697ab188731ec4861e1eb72eca7a18d2&key=IDENTIFICATIVO
+     * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
      * 
      * @brief
      * 
@@ -224,15 +230,15 @@ public class WebService {
         if (c < count) {
             // solo se c< count, altrimenti inserirebbe un numero non valido, e quindi darebbe errore
 
-            String URLBase = host_cattedra + "getString.php?token=";
-            String webRequest = URLBase + token + "&key=" ; // imposta la stringa con identificativo
+            String URLBase = host_cattedra + "deleteString.php?token=";
+            String webRequest = URLBase + token + "&key=" + c ; // imposta la stringa con identificativo
             System.out.println(webRequest);
 
             URL request = new URL(webRequest);
             String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
             // {"status":"ok","result":{"key":"9","string":"ciao"}} 
             // OR 
-            // {"status":"error","message":"parametro 'key' mancante"}
+            // {"status":"error","message":""}
             System.out.println(result);
             String jsonString = result; //assign your JSON String here
             JSONObject obj = new JSONObject(jsonString);
@@ -241,6 +247,7 @@ public class WebService {
 
             if (oggetto.equals("ok")) {
                 // tutto a posto
+                r.setStato(true);    
             }
 
         } else {
