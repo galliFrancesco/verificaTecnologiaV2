@@ -2,15 +2,17 @@ package verificaweb2;
 
 /**
  *
- * @author galli_francesco
+ * @author gallFrancesco
  */
 public class Place {
     
     // Non ho idea di cosa dovrebbe contenere   
-    String place; 
-    
+    String town; 
+    String country;
+    String state;
+    String PostCode;
     
     public Place(){
-    
+        
     }
 }

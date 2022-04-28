@@ -22,7 +22,8 @@ import org.json.JSONObject;
  */
 public class WebService {
 
-    static String host_cattedra = "http://172.16.102.100/";
+    static String host_cattedra = "https://savestrings.netsons.org/SaveStrings/";
+    static int count = 0;
 
     /**
      * EX:
@@ -37,8 +38,10 @@ public class WebService {
      */
     static public String register(String username, String password) throws MalformedURLException, IOException {
 
-        String URLBase = host_cattedra + "SaveStrings/register.php?username=";
+        String URLBase = host_cattedra + "register.php?username=";
         String webRequest = URLBase + username + "&password=" + password; // url completo  
+
+        System.out.println(webRequest);
 
         URL request = new URL(webRequest);
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
@@ -80,7 +83,7 @@ public class WebService {
 
         Risposta r = new Risposta();
 
-        String URLBase = host_cattedra + "SaveStrings/getToken.php?username=";
+        String URLBase = host_cattedra + "getToken.php?username=";
         String webRequest = URLBase + username + "&password=" + password; // url completo  
 
         URL request = new URL(webRequest);
@@ -112,8 +115,46 @@ public class WebService {
         return r;
     }
 
-    static public void setString() {
+    /**
+     * 
+     * @param token
+     * 
+     * @return
+     */
+    static public Risposta setString(String token) throws MalformedURLException, IOException {
 
+        Risposta r = new Risposta();
+        
+        String URLBase = host_cattedra + "setString.php?token=";
+        String webRequest = URLBase + token + "&key=" + count + "&string=ciao";  // imposta una stringa con identificativo
+        System.out.println(webRequest);
+
+        URL request = new URL(webRequest);
+        String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
+        // https://savestrings.netsons.org/SaveStrings/getString.php?token=e5493a6f14a9ab8656163d431f9130c9&key=0&string=ciao
+        
+        // {"status":"ok","result":{"key":"IDENTIFICATIVO","string":"HELLO_WORLD"}}   
+        // OR 
+        // {"status":"error","message":"parametro 'key' mancante"}
+        System.out.println(result);
+        String jsonString = result; //assign your JSON String here
+        JSONObject obj = new JSONObject(jsonString);
+
+        String oggetto = obj.getString("status");
+
+        if (!oggetto.equals("ok")) {
+            // allora non è andato a buon fine
+            r.setStato(false);
+            r.setDato(obj.getString("message"));
+
+        } else {
+            
+            r.setStato(true);
+        }
+
+        count++;
+
+        return r;
     }
 
     static public void getString() {

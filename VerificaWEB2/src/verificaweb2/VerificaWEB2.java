@@ -39,16 +39,23 @@ public class VerificaWEB2 {
 
                 r = WebService.getToken(mail, pass);
 
-                if (r.getStato()) {
+                if (r.getStato()) { // se lo stato va bene
                     System.out.println(r.getDato()); // <- Token 
+                    ut.setToken(r.getDato());
                 }
+
                 break;
             case 1:// Login 
 
+                ut.setMail(mail);
+                ut.setPass(pass);
+                
                 r = WebService.getToken(mail, pass);
 
                 if (r.getStato()) {
                     // Imposta il token    
+                    System.out.println("Login Effettuato!");
+                    ut.setToken(r.getDato());
                 } else {
                     System.out.println(r.getDato()); // <- Errore 
                 }
@@ -64,10 +71,12 @@ public class VerificaWEB2 {
             switch (c) {
                 case 1: // inserisci tappa
 
-                    String tappa = setTappa(); 
-                    mappa.run(tappa); 
+                    //String tappa = setTappa();
+                    //mappa.run(tappa);
+                    r = WebService.setString(ut.getToken());
                     
-                    
+                    //System.out.println(r.getDato());
+
                     // una volta finito c'è la cosa delle sclete
                     break;
                 case 2: // visualizza tappe

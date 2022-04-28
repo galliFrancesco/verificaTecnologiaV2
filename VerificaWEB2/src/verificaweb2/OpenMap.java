@@ -67,7 +67,7 @@ public class OpenMap {
 
         if (nodelist != null && nodelist.getLength() > 0) {
             int numNode = nodelist.getLength();
-            System.out.println("Ho degli elementi: " + numNode);
+            //System.out.println("Ho degli elementi: " + numNode);
 
             Element e = (Element) nodelist.item(0); // <- prende il primo elemento 
  
@@ -84,7 +84,7 @@ public class OpenMap {
             element = (Element) nodelist.item(0);
             NodeList nl = element.getElementsByTagName("town");
             String f = nl.item(0).getTextContent();
-            System.out.println(f);       
+            //System.out.println(f);       
         }
         
         //// TODO: IMPOSTARE CHE RESTITUISCE UN VETTORE DI PLACES 
