@@ -20,7 +20,7 @@ public class VerificaWEB2 {
         Utente ut = new Utente();
 
         int c = 0; // scelta
-        System.out.println("\n 0. Registrazione \n 1.login");
+        System.out.println("\n0. Registrazione \n1. Login");
         c = myObj.nextInt();
 
         myObj.nextLine();
@@ -98,10 +98,18 @@ public class VerificaWEB2 {
                     
                     break;
                 case 4: // inverti tappa
+                    // swap tra le due 
+                    
+                    int x = 0; 
+                    int y = 0; 
+                    
                     break;
                 case 5: // calcola distanza itinerario 
                     break;
                 case 6: // cancella itinerario 
+                    
+                    WebService.deleteAllStrings(ut.getToken());
+                                    
                     break;
                 case 0: // esci 
                     break;

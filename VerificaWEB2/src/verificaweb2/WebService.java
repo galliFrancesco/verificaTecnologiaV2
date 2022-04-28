@@ -13,6 +13,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
+import static verificaweb2.WebService.count;
+import static verificaweb2.WebService.host_cattedra;
 
 /**
  *
@@ -26,7 +28,6 @@ public class WebService {
     static String host_cattedra = "https://savestrings.netsons.org/SaveStrings/";
     static int count = 0;
 
-    
     /**
      * EX:
      * http://HOST_CATTEDRA/SaveStrings/register.php?username=aaa&password=bbb
@@ -69,7 +70,6 @@ public class WebService {
          */
     }
 
-    
     /**
      * EX:
      * http://HOST_CATTEDRA/SaveStrings/getToken.php?username=aaa&password=bbb
@@ -118,7 +118,6 @@ public class WebService {
         return r;
     }
 
-    
     /**
      * EX:
      * https://savestrings.netsons.org/SaveStrings/getString.php?token=e5493a6f14a9ab8656163d431f9130c9&key=0&string=ciao
@@ -165,7 +164,6 @@ public class WebService {
         return r;
     }
 
-    
     /**
      * EX:
      * https://savestrings.netsons.org/SaveStrings/getString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
@@ -181,16 +179,17 @@ public class WebService {
 
         String URLBase = host_cattedra + "getString.php?token=";
 
+        
         for (int i = 0; i < count; i++) {// Stampa ogni stringa scritta dall'utente          
             String webRequest = URLBase + token + "&key=" + i;  // imposta la stringa con identificativo
-            System.out.println(webRequest);
+            //System.out.println(webRequest);
 
             URL request = new URL(webRequest);
             String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
             // {"status":"ok","result":{"key":"9","string":"ciao"}} 
             // OR 
             // {"status":"error","message":"parametro 'key' mancante"}
-            System.out.println(result);
+            //System.out.println(result);
             String jsonString = result; //assign your JSON String here
             JSONObject obj = new JSONObject(jsonString);
 
@@ -202,28 +201,30 @@ public class WebService {
                 JSONObject jResult = obj.getJSONObject("result");
                 System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"));
 
-            }
-
+            } 
         }
+        
+        if(count==0){
+            System.out.println("\n Nessuna tappa");
+         }
     }
 
-    
     /**
      * EX:
      * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
-     * 
+     *
      * @brief
-     * 
+     *
      * @param token
      * @param c
-     * 
+     *
      * @return r(Risposta)
-     * 
+     *
      * @throws MalformedURLException
-     * @throws IOException 
+     * @throws IOException
      */
     static public Risposta deleteString(String token, int c) throws MalformedURLException, IOException {
-        
+
         Risposta r = new Risposta();
 
         // c-> scelta dell'utente del messaggio da cancellare
@@ -231,7 +232,7 @@ public class WebService {
             // solo se c< count, altrimenti inserirebbe un numero non valido, e quindi darebbe errore
 
             String URLBase = host_cattedra + "deleteString.php?token=";
-            String webRequest = URLBase + token + "&key=" + c ; // imposta la stringa con identificativo
+            String webRequest = URLBase + token + "&key=" + c; // imposta la stringa con identificativo
             System.out.println(webRequest);
 
             URL request = new URL(webRequest);
@@ -247,11 +248,12 @@ public class WebService {
 
             if (oggetto.equals("ok")) {
                 // tutto a posto
-                r.setStato(true);    
+                r.setStato(true);
             }
 
         } else {
             r.setStato(false);
+            System.out.println("Non ci sono così tante tappe :c"); 
         }
 
         return r;
@@ -259,5 +261,49 @@ public class WebService {
 
     static public void getKeys() {
 
+    }
+
+    /**
+     * EX:
+     * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
+     *
+     * @brief Simile all'altro metodo, ma elimina TUTTE le stringhe dell'utente
+     *
+     * @param token
+     *
+     * @return r(Risposta)
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    static void deleteAllStrings(String token) throws MalformedURLException, IOException {
+
+        Risposta r = new Risposta();
+
+        String URLBase = host_cattedra + "deleteString.php?token=";
+        
+        for (int i = 0; i < count; i++) {
+            
+            String webRequest = URLBase + token + "&key=" + i; // imposta la stringa con identificativo
+            System.out.println(webRequest);
+
+            URL request = new URL(webRequest);
+            String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
+            // {"status":"ok","result":{"key":"9","string":"ciao"}} 
+            // OR 
+            // {"status":"error","message":""}
+            System.out.println(result);
+            String jsonString = result; //assign your JSON String here
+            JSONObject obj = new JSONObject(jsonString);
+
+            String oggetto = obj.getString("status");
+
+            if (oggetto.equals("ok")) {
+                // tutto a posto
+                r.setStato(true);
+            }
+        }
+        
+        count = 0;
     }
 }
