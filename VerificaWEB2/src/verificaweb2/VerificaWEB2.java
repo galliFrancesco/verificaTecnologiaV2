@@ -70,16 +70,16 @@ public class VerificaWEB2 {
 
             switch (c) {
                 case 1: // inserisci tappa
-
                     //String tappa = setTappa();
                     //mappa.run(tappa);
-                    r = WebService.setString(ut.getToken());
-                    
+                    r = WebService.setString(ut.getToken());                    
                     //System.out.println(r.getDato());
 
-                    // una volta finito c'è la cosa delle sclete
                     break;
                 case 2: // visualizza tappe
+                    
+                    WebService.getString(ut.getToken());
+                    
                     break;
                 case 3: // rimuovi tappa
                     break;

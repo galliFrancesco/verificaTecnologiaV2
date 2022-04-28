@@ -17,7 +17,7 @@ import org.json.JSONObject;
  *
  * @author galli_francesco
  *
- * @brief Fa i metodi relativi al server
+ * @brief Fa i metodi relativi al server SaveStrings
  *
  */
 public class WebService {
@@ -116,23 +116,27 @@ public class WebService {
     }
 
     /**
-     * 
+     * EX:
+     * https://savestrings.netsons.org/SaveStrings/getString.php?token=e5493a6f14a9ab8656163d431f9130c9&key=0&string=ciao
+     *
+     * @brief Imposta una stringa con un identificativo (un count in questo
+     * caso)
+     *
      * @param token
-     * 
+     *
      * @return
      */
     static public Risposta setString(String token) throws MalformedURLException, IOException {
 
         Risposta r = new Risposta();
-        
+
         String URLBase = host_cattedra + "setString.php?token=";
         String webRequest = URLBase + token + "&key=" + count + "&string=ciao";  // imposta una stringa con identificativo
         System.out.println(webRequest);
 
         URL request = new URL(webRequest);
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
-        // https://savestrings.netsons.org/SaveStrings/getString.php?token=e5493a6f14a9ab8656163d431f9130c9&key=0&string=ciao
-        
+
         // {"status":"ok","result":{"key":"IDENTIFICATIVO","string":"HELLO_WORLD"}}   
         // OR 
         // {"status":"error","message":"parametro 'key' mancante"}
@@ -148,7 +152,7 @@ public class WebService {
             r.setDato(obj.getString("message"));
 
         } else {
-            
+
             r.setStato(true);
         }
 
@@ -157,12 +161,93 @@ public class WebService {
         return r;
     }
 
-    static public void getString() {
+    /**
+     * EX:
+     * https://savestrings.netsons.org/SaveStrings/getString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
+     *
+     * @brief Stampa a video tutte le stringhe salvate dall'utente
+     *
+     * @param token
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
+    static public void getString(String token) throws MalformedURLException, IOException {
 
+        String URLBase = host_cattedra + "getString.php?token=";
+
+        for (int i = 0; i < count; i++) {// Stampa ogni stringa scritta dall'utente          
+            String webRequest = URLBase + token + "&key=" + i;  // imposta la stringa con identificativo
+            System.out.println(webRequest);
+
+            URL request = new URL(webRequest);
+            String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
+            // {"status":"ok","result":{"key":"9","string":"ciao"}} 
+            // OR 
+            // {"status":"error","message":"parametro 'key' mancante"}
+            System.out.println(result);
+            String jsonString = result; //assign your JSON String here
+            JSONObject obj = new JSONObject(jsonString);
+
+            String oggetto = obj.getString("status");
+
+            if (oggetto.equals("ok")) {
+                // tutto a posto
+
+                JSONObject jResult = obj.getJSONObject("result");
+                System.out.println(i + ": " + jResult.getString("string"));
+
+            }
+
+        }
     }
 
-    static public void deleteString() {
+    /**
+     * EX:
+     * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=697ab188731ec4861e1eb72eca7a18d2&key=IDENTIFICATIVO
+     * 
+     * @brief
+     * 
+     * @param token
+     * @param c
+     * 
+     * @return r(Risposta)
+     * 
+     * @throws MalformedURLException
+     * @throws IOException 
+     */
+    static public Risposta deleteString(String token, int c) throws MalformedURLException, IOException {
+        
+        Risposta r = new Risposta();
 
+        // c-> scelta dell'utente del messaggio da cancellare
+        if (c < count) {
+            // solo se c< count, altrimenti inserirebbe un numero non valido, e quindi darebbe errore
+
+            String URLBase = host_cattedra + "getString.php?token=";
+            String webRequest = URLBase + token + "&key=" ; // imposta la stringa con identificativo
+            System.out.println(webRequest);
+
+            URL request = new URL(webRequest);
+            String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
+            // {"status":"ok","result":{"key":"9","string":"ciao"}} 
+            // OR 
+            // {"status":"error","message":"parametro 'key' mancante"}
+            System.out.println(result);
+            String jsonString = result; //assign your JSON String here
+            JSONObject obj = new JSONObject(jsonString);
+
+            String oggetto = obj.getString("status");
+
+            if (oggetto.equals("ok")) {
+                // tutto a posto
+            }
+
+        } else {
+            r.setStato(false);
+        }
+
+        return r;
     }
 
     static public void getKeys() {
