@@ -89,7 +89,7 @@ public class OpenMap {
             p.setPos(lat, longi);
             
             String nome = e.getAttribute("display_name");
-            System.out.println("Stampa: "+nome);
+            //System.out.println("Stampa: "+nome);
             p.setName(nome); 
 
             

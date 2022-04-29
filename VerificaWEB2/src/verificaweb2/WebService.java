@@ -38,7 +38,7 @@ public class WebService {
      *
      * @param username
      * @param password
-     * 
+     *
      * @return String
      *
      * @throws java.net.MalformedURLException
@@ -82,7 +82,7 @@ public class WebService {
      *
      * @param username
      * @param password
-     * 
+     *
      * @return r
      *
      * @throws java.net.MalformedURLException
@@ -133,7 +133,7 @@ public class WebService {
      * @param token
      *
      * @throws java.net.MalformedURLException
-     * 
+     *
      * @return
      */
     static public Risposta setString(String token, Place p) throws MalformedURLException, IOException {
@@ -142,13 +142,13 @@ public class WebService {
         // PRENDERE IN INPUT UN PLACE
         // E PRENDERE DA QUELLO LE INFORMAZIONI      
         Risposta r = new Risposta();
-        
-        String daSalvare = /*Nome, lat, long*/ p.getTown() + "," + p.getLat() + "_"+ p.getLongi() ; 
-        daSalvare= URLEncoder.encode(daSalvare, StandardCharsets.UTF_8);
-        
+
+        String daSalvare = /*Nome, lat, long*/ p.getTown() + "," + p.getLat() + "_" + p.getLongi();
+        daSalvare = URLEncoder.encode(daSalvare, StandardCharsets.UTF_8);
+
         String URLBase = host_cattedra + "setString.php?token=";
-        String webRequest = URLBase + token + "&key=" + count + "&string='"+ daSalvare +"'";  // imposta una stringa con identificativo
-        System.out.println(webRequest);
+        String webRequest = URLBase + token + "&key=" + count + "&string='" + daSalvare + "'";  // imposta una stringa con identificativo
+        //System.out.println(webRequest);
 
         URL request = new URL(webRequest);
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
@@ -192,7 +192,6 @@ public class WebService {
 
         String URLBase = host_cattedra + "getString.php?token=";
 
-        
         for (int i = 0; i < count; i++) {// Stampa ogni stringa scritta dall'utente          
             String webRequest = URLBase + token + "&key=" + i;  // imposta la stringa con identificativo
             //System.out.println(webRequest);
@@ -214,12 +213,12 @@ public class WebService {
                 JSONObject jResult = obj.getJSONObject("result");
                 System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"));
 
-            } 
+            }
         }
-        
-        if(count==0){
+
+        if (count == 0) {
             System.out.println("\n Nessuna tappa");
-         }
+        }
     }
 
     /**
@@ -266,14 +265,44 @@ public class WebService {
 
         } else {
             r.setStato(false);
-            System.out.println("Non ci sono così tante tappe :c"); 
+            System.out.println("Non ci sono così tante tappe :c");
         }
 
         return r;
     }
 
-    static public void getKeys() {
+    static public void getKeys(String token) throws MalformedURLException, IOException {
+        // http://HOST_CATTEDRA/SaveStrings/getKeys.php?token=697ab188731ec4861e1eb72eca7a18d2
 
+        String URLBase = host_cattedra + "getKeys.php?token=";
+        String webRequest = URLBase + token;  // imposta la stringa con identificativo
+        System.out.println(webRequest); 
+        
+        URL request = new URL(webRequest);
+
+        String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
+        String jsonString = result; //assign your JSON String here
+
+        //System.out.println(webRequest);
+        // {"status":"ok","result":{"key":"9","string":"ciao"}} 
+        // OR 
+        // {"status":"error","message":"parametro 'key' mancante"}
+        //System.out.println(result);
+        JSONObject obj = new JSONObject(jsonString);
+
+        String oggetto = obj.getString("status");
+
+        if (oggetto.equals("ok")) {
+            // tutto a posto
+
+            JSONObject jResult = obj.getJSONObject("result");
+            //System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"));
+
+        }
+
+        if (count == 0) {
+            System.out.println("\n Nessuna tappa");
+        }
     }
 
     /**
@@ -294,9 +323,9 @@ public class WebService {
         Risposta r = new Risposta();
 
         String URLBase = host_cattedra + "deleteString.php?token=";
-        
+
         for (int i = 0; i < count; i++) {
-            
+
             String webRequest = URLBase + token + "&key=" + i; // imposta la stringa con identificativo
             System.out.println(webRequest);
 
@@ -316,7 +345,7 @@ public class WebService {
                 r.setStato(true);
             }
         }
-        
+
         count = 0;
     }
 }
