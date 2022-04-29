@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package verificaweb2;
 
 import java.io.BufferedReader;
@@ -12,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -21,9 +15,10 @@ import static verificaweb2.WebService.host_cattedra;
 
 /**
  *
- * @author galli_francesco
+ * @author galliFrancesco
  *
- * @brief Fa i metodi relativi al server SaveStrings
+ * @brief Metodi relativi al server SaveStrings
+ * (https://savestrings.netsons.org/SaveStrings/)
  *
  */
 public class WebService {
@@ -272,19 +267,28 @@ public class WebService {
         return r;
     }
 
+    /**
+     * EX:
+     * http://HOST_CATTEDRA/SaveStrings/getKeys.php?token=697ab188731ec4861e1eb72eca7a18d2
+     *
+     * @brief
+     *
+     * @param token
+     *
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     static public void getKeys(String token) throws MalformedURLException, IOException {
-        // http://HOST_CATTEDRA/SaveStrings/getKeys.php?token=697ab188731ec4861e1eb72eca7a18d2
-
         String URLBase = host_cattedra + "getKeys.php?token=";
         String webRequest = URLBase + token;  // imposta la stringa con identificativo
         //System.out.println(webRequest); 
-        
+
         URL request = new URL(webRequest);
 
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
         String jsonString = result; //assign your JSON String here
         //System.out.println(result);
-        
+
         //System.out.println(webRequest);
         // {"status":"ok","result":{"key":"9","string":"ciao"}} 
         // OR 
@@ -292,28 +296,26 @@ public class WebService {
         //System.out.println(result);
         JSONObject obj = new JSONObject(jsonString);
         String oggetto = obj.getString("status");
-        
+
         System.out.println("Chiavi: ");
-        
+
         if (oggetto.equals("ok")) {
             // tutto a posto
 
             JSONArray jResult = obj.getJSONArray("result");
             //System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"));
-            
-            for(int i = 1; i<jResult.length(); i++){
+
+            for (int i = 1; i < jResult.length(); i++) {
                 System.out.print(jResult.get(i));
                 System.out.print(", ");
             }
-            
-            
-            
+
         }
     }
 
     /**
      * EX:
-     * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
+     * http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1
      *
      * @brief Simile all'altro metodo, ma elimina TUTTE le stringhe dell'utente
      *
