@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -86,7 +88,13 @@ public class OpenMap {
             float longi = Float.parseFloat(longiS);
             p.setPos(lat, longi);
             
+            String nome = e.getAttribute("display_name");
+            System.out.println("Stampa: "+nome);
+            p.setName(nome); 
+
+            
             // Prende gli oggetti da <town> [...] </town>
+            /* POTREBBE SERVIRE
             element = (Element) nodelist.item(0);
             NodeList nl = element.getElementsByTagName("town");
            
@@ -108,7 +116,7 @@ public class OpenMap {
             nl = element.getElementsByTagName("postcode");
             f = nl.item(0).getTextContent();
             System.out.println("postcode: "+f); 
-            p.setPostCode(f);
+            p.setPostCode(f);*/
         }
         
         return p;  

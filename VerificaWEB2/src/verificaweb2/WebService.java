@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
@@ -138,12 +140,14 @@ public class WebService {
 
         // TODO :: //
         // PRENDERE IN INPUT UN PLACE
-        // E PRENDERE DA QUELLO LE INFORMAZIONI
-        
+        // E PRENDERE DA QUELLO LE INFORMAZIONI      
         Risposta r = new Risposta();
-
+        
+        String daSalvare = /*Nome, lat, long*/ p.getTown() + "," + p.getLat() + "_"+ p.getLongi() ; 
+        daSalvare= URLEncoder.encode(daSalvare, StandardCharsets.UTF_8);
+        
         String URLBase = host_cattedra + "setString.php?token=";
-        String webRequest = URLBase + token + "&key=" + count + "&string=ciao";  // imposta una stringa con identificativo
+        String webRequest = URLBase + token + "&key=" + count + "&string='"+ daSalvare +"'";  // imposta una stringa con identificativo
         System.out.println(webRequest);
 
         URL request = new URL(webRequest);
