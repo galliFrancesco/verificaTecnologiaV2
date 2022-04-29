@@ -69,7 +69,7 @@ public class VerificaWEB2 {
         if (gandalf) {
             do {
 
-                System.out.println("\n 1. Inserisci tappa \n 2. Visualizza lista tappe \n 3. Rimuovi tappa\n 4. Inverti tappe\n 5. Calcola distanza itinerario\n 6. Cancella itinerario\n 0. Esci");
+                System.out.println("\n 1. Inserisci tappa \n 2. Visualizza lista tappe \n 3. Visualizza Chiavi \n 4. Rimuovi tappa\n 5. Inverti tappe\n 6. Calcola distanza itinerario\n 7. Cancella itinerario\n 0. Esci");
                 c = myObj.nextInt();
 
                 switch (c) {
@@ -85,8 +85,13 @@ public class VerificaWEB2 {
                         WebService.getString(ut.getToken());
 
                         break;
-                    case 3: // rimuovi tappa
-
+                    case 3: // visualizza Chiavi 
+                        
+                        WebService.getKeys(ut.getToken());
+                        
+                        break;                    
+                    case 4: // rimuovi tappa
+                        
                         System.out.println("Numero della tappa da togliere?");
 
                         int num = 0;
@@ -101,21 +106,21 @@ public class VerificaWEB2 {
                         }
 
                         break;
-                    case 4: // inverti tappa
+                    case 5: // inverti tappa
                         // swap tra le due 
 
                         int x = 0;
                         int y = 0;
 
                         break;
-                    case 5: // calcola distanza itinerario 
+                    case 6: // calcola distanza itinerario 
 
                         break;
-                    case 6: // cancella itinerario 
+                    case 7: // cancella itinerario 
 
                         WebService.deleteAllStrings(ut.getToken());
 
-                        break;
+                        break; 
                     case 0: // esci 
                         break;
                 }

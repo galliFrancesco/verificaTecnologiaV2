@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.stream.Collectors;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import static verificaweb2.WebService.count;
 import static verificaweb2.WebService.host_cattedra;
@@ -143,8 +144,8 @@ public class WebService {
         // E PRENDERE DA QUELLO LE INFORMAZIONI      
         Risposta r = new Risposta();
 
-        String daSalvare = /*Nome, lat, long*/ p.getTown() + "," + p.getLat() + "_" + p.getLongi();
-        daSalvare = URLEncoder.encode(daSalvare, StandardCharsets.UTF_8);
+        String daSalvare = /*Nome, lat, long*/ p.getTown() + "," + p.getLat() + " " + p.getLongi();
+        daSalvare = URLEncoder.encode(daSalvare, StandardCharsets.UTF_8); // modifica la stringa di modo che possa entrare nell'URL
 
         String URLBase = host_cattedra + "setString.php?token=";
         String webRequest = URLBase + token + "&key=" + count + "&string='" + daSalvare + "'";  // imposta una stringa con identificativo
@@ -156,7 +157,7 @@ public class WebService {
         // {"status":"ok","result":{"key":"IDENTIFICATIVO","string":"HELLO_WORLD"}}   
         // OR 
         // {"status":"error","message":"parametro 'key' mancante"}
-        System.out.println(result);
+        //System.out.println(result);
         String jsonString = result; //assign your JSON String here
         JSONObject obj = new JSONObject(jsonString);
 
@@ -276,32 +277,37 @@ public class WebService {
 
         String URLBase = host_cattedra + "getKeys.php?token=";
         String webRequest = URLBase + token;  // imposta la stringa con identificativo
-        System.out.println(webRequest); 
+        //System.out.println(webRequest); 
         
         URL request = new URL(webRequest);
 
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
         String jsonString = result; //assign your JSON String here
-
+        //System.out.println(result);
+        
         //System.out.println(webRequest);
         // {"status":"ok","result":{"key":"9","string":"ciao"}} 
         // OR 
         // {"status":"error","message":"parametro 'key' mancante"}
         //System.out.println(result);
         JSONObject obj = new JSONObject(jsonString);
-
         String oggetto = obj.getString("status");
-
+        
+        System.out.println("Chiavi: ");
+        
         if (oggetto.equals("ok")) {
             // tutto a posto
 
-            JSONObject jResult = obj.getJSONObject("result");
+            JSONArray jResult = obj.getJSONArray("result");
             //System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"));
-
-        }
-
-        if (count == 0) {
-            System.out.println("\n Nessuna tappa");
+            
+            for(int i = 1; i<jResult.length(); i++){
+                System.out.print(jResult.get(i));
+                System.out.print(", ");
+            }
+            
+            
+            
         }
     }
 
