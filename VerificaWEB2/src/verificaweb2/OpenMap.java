@@ -24,24 +24,32 @@ public class OpenMap {
     String URLBase;
 
     public OpenMap() {
-        URLBase = "https://nominatim.openstreetmap.org/search?q=";
-        // https://nominatim.openstreetmap.org/search?q=mariano+comense,+monnet&format=xml&addressdetails=1 
+        URLBase = "https://nominatim.openstreetmap.org/search?q="; 
     }
-
+    
     /**
-     * @param azione(String) -> Località da cercare nella query
+     * EX: 
+     * https://nominatim.openstreetmap.org/search?q=erba&format=xml&addressdetails=1
+     * 
+     * @brief Invia una query e prende l einfo di un posto da un XML
+     * 
+     * @param azione
+     * 
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws SAXException
+     * @throws ParserConfigurationException 
      */
-    public void run(String azione) throws MalformedURLException, IOException, SAXException, ParserConfigurationException {
-
+    public Place place(String azione) throws MalformedURLException, IOException, SAXException, ParserConfigurationException {
+        
+        Place p = new Place(); 
         //Modifico la stringa per la query
         azione = modifica(azione);
 
         String URLCompleto = URLBase + azione;
-
         URL request = new URL(URLCompleto); //Fa la richiesta web
 
         String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // prende il file XML
-        System.out.println(result);
 
         // lo scrive in un file XML giusto per
         FileWriter fw = new FileWriter("temp.xml");
@@ -68,30 +76,57 @@ public class OpenMap {
         if (nodelist != null && nodelist.getLength() > 0) {
             int numNode = nodelist.getLength();
             //System.out.println("Ho degli elementi: " + numNode);
-
             Element e = (Element) nodelist.item(0); // <- prende il primo elemento 
  
-            //System.out.println(e.getAttribute("lat"));
-            //System.out.println(e.getAttribute("lon"));
-            //String lat = e.getAttribute("lat");
-            //String longi = e.getAttribute("lon");
-            // Prende gli attributi di <place> e ne prende la latitudine e la longitudine
-
-            //System.out.println(e.getAttribute("lat"));                   
-            //System.out.println(e.getAttribute("lon"));    
-            // NON SERVE, MA
+            String latS = e.getAttribute("lat");
+            String longiS = e.getAttribute("lon");
+            
+            // String to Float
+            float lat = Float.parseFloat(latS); 
+            float longi = Float.parseFloat(longiS);
+            p.setPos(lat, longi);
+            
             // Prende gli oggetti da <town> [...] </town>
             element = (Element) nodelist.item(0);
             NodeList nl = element.getElementsByTagName("town");
+           
+            if (nl.getLength() > 0 ){ // controlla se c'è il tag town
+        
+                String f = nl.item(0).getTextContent();
+                System.out.println("Stampa: "+f); 
+                p.setName(f);
+                
+            } else { // nulla mette le coordinate
+                // che ha già messo 
+            }
+            
+            nl = element.getElementsByTagName("county");
             String f = nl.item(0).getTextContent();
-            //System.out.println(f);       
+            System.out.println("County: "+f); 
+            p.setCounty(f);
+            
+            nl = element.getElementsByTagName("postcode");
+            f = nl.item(0).getTextContent();
+            System.out.println("postcode: "+f); 
+            p.setPostCode(f);
         }
         
-        //// TODO: IMPOSTARE CHE RESTITUISCE UN VETTORE DI PLACES 
-        //// MA IN QUESTO PRENDE SOLO IL PRIMO 
-        //// TODO: CONTROLLARE SE ESISTE TOWN O ALTRO 
+        return p;  
     }
 
+    
+    public Place places(){     
+        
+        //// TODO: IMPOSTARE CHE RESTITUISCE UN VETTORE DI PLACES 
+        //// NELL'ALTRO PRENDE SOLO IL PRIMO 
+        Place p = new Place(); 
+        
+        
+        return p; 
+    }
+    
+    
+    
     /**
      * @brief Imposta gli spazi e mette in coda le cose di cui ho bisogno(&format=xml&addressdetails=1)
      * @param s(String) -> Input dell'utente sulla tappa

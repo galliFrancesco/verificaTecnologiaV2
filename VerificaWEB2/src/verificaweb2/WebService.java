@@ -32,10 +32,12 @@ public class WebService {
      * EX:
      * http://HOST_CATTEDRA/SaveStrings/register.php?username=aaa&password=bbb
      *
-     * @brief registra l'utente "aaa" con password "bbb"
+     * @brief registra l'utente com mail e password
      *
      * @param username
      * @param password
+     * 
+     * @return String
      *
      * @throws java.net.MalformedURLException
      */
@@ -78,7 +80,8 @@ public class WebService {
      *
      * @param username
      * @param password
-     * @param r
+     * 
+     * @return r
      *
      * @throws java.net.MalformedURLException
      */
@@ -127,10 +130,16 @@ public class WebService {
      *
      * @param token
      *
+     * @throws java.net.MalformedURLException
+     * 
      * @return
      */
-    static public Risposta setString(String token) throws MalformedURLException, IOException {
+    static public Risposta setString(String token, Place p) throws MalformedURLException, IOException {
 
+        // TODO :: //
+        // PRENDERE IN INPUT UN PLACE
+        // E PRENDERE DA QUELLO LE INFORMAZIONI
+        
         Risposta r = new Risposta();
 
         String URLBase = host_cattedra + "setString.php?token=";
