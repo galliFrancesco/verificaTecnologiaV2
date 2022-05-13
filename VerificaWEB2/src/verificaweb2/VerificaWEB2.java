@@ -33,8 +33,6 @@ public class VerificaWEB2 {
 
         switch (c) {
             case 0: // Registrazione
-
-
                 String res = WebService.register(mail, pass);
                 System.out.println(res);
 
@@ -70,7 +68,10 @@ public class VerificaWEB2 {
                         posto = mappa.place(tappa);
 
                         r = WebService.setString(ut.getToken(), posto);
-
+                        
+                        if(!r.getStato())
+                            System.out.println(r.getDato()); 
+                        
                         break;
                     case 2: // visualizza tappe
 

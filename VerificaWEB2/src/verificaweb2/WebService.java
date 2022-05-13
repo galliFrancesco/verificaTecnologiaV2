@@ -215,6 +215,8 @@ public class WebService {
         if (count == 0) {
             System.out.println("\n Nessuna tappa");
         }
+        
+        return list<String>;
     }
 
     static public void getDistanza(String token) throws MalformedURLException, IOException {
@@ -443,6 +445,8 @@ public class WebService {
      */
     static void deleteAllStrings(String token) throws MalformedURLException, IOException {
 
+        //dammi tutte le key -> lista
+        //foreach -> deleteString(lista.get(i))
         Risposta r = new Risposta();
 
         String URLBase = host_cattedra + "deleteString.php?token=";
