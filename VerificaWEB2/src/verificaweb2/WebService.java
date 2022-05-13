@@ -217,6 +217,81 @@ public class WebService {
         }
     }
 
+    static public void getDistanza(String token) throws MalformedURLException, IOException {
+        
+        // alla fine è come getString l'inizio, perchè deve comunque prendere le tappe
+        
+        String URLBase = host_cattedra + "getString.php?token=";
+
+        for (int i = 0; i < count; i++) {// Stampa ogni stringa scritta dall'utente          
+            String webRequest = URLBase + token + "&key=" + i;  // imposta la stringa con identificativo
+            //System.out.println(webRequest);
+
+            URL request = new URL(webRequest);
+            String result = new BufferedReader(new InputStreamReader(request.openStream())).lines().collect(Collectors.joining("\n")); // manda la richiesta
+            // {"status":"ok","result":{"key":"9","string":"ciao"}} 
+            // OR 
+            // {"status":"error","message":"parametro 'key' mancante"}
+            //System.out.println(result);
+            String jsonString = result; //assign your JSON String here
+            JSONObject obj = new JSONObject(jsonString);
+
+            String oggetto = obj.getString("status");
+
+            if (oggetto.equals("ok")) {
+                // tutto a posto
+
+                JSONObject jResult = obj.getJSONObject("result");
+                //System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"))
+                String sResult = jResult.getString("key") + i + ": " + jResult.getString("string");
+                // EX:  "00: 'Erba, Como, Lombardia, Italia,45.80958 9.231242'"
+                
+                int posIniz = sResult.lastIndexOf(","); 
+                System.out.println(posIniz);
+                int posFin = sResult.lastIndexOf("'"); 
+                System.out.println(posFin);
+                
+                // SUBSTRING
+                //public String substring(int startIndex, int endIndex) 
+                String subbato = sResult.substring(posIniz+1, posFin); // <- QUESTA STRINGA CONTIENE LAT E LONG
+                
+                // un altra Substring per prendere i valori?
+                
+                
+                
+            }
+        }
+
+        if (count == 0) {
+            System.out.println("\n Nessuna tappa");
+        }
+        
+        /*
+        SOURCE: https://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
+        
+        function degreesToRadians(degrees) {
+            return degrees * Math.PI / 180;
+          }
+
+          function distanceInKmBetweenEarthCoordinates(lat1, lon1, lat2, lon2) {
+            var earthRadiusKm = 6371;
+
+            var dLat = degreesToRadians(lat2-lat1);
+            var dLon = degreesToRadians(lon2-lon1);
+
+            lat1 = degreesToRadians(lat1);
+            lat2 = degreesToRadians(lat2);
+
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            return earthRadiusKm * c;
+          }
+        
+        
+        */
+    }
+
     /**
      * EX:
      * //http://HOST_CATTEDRA/SaveStrings/deleteString.php?token=e0b46d738a3dc47990271beca88c3b6d&key=1

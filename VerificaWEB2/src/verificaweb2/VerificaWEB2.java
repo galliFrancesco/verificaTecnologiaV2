@@ -114,7 +114,9 @@ public class VerificaWEB2 {
 
                         break;
                     case 6: // calcola distanza itinerario 
-
+                  
+                        WebService.getDistanza(ut.getToken());
+                        
                         break;
                     case 7: // cancella itinerario 
 
