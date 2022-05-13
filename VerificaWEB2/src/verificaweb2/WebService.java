@@ -184,7 +184,7 @@ public class WebService {
      * @throws MalformedURLException
      * @throws IOException
      */
-    static public void getString(String token) throws MalformedURLException, IOException {
+    static public list<String> getString(String token) throws MalformedURLException, IOException {
 
         String URLBase = host_cattedra + "getString.php?token=";
 

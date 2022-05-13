@@ -33,20 +33,11 @@ public class VerificaWEB2 {
 
         switch (c) {
             case 0: // Registrazione
-                ut.setMail(mail);
-                ut.setPass(pass);
+
 
                 String res = WebService.register(mail, pass);
                 System.out.println(res);
 
-                r = WebService.getToken(mail, pass);
-
-                if (r.getStato()) { // se lo stato va bene
-                    System.out.println(r.getDato()); // <- Token 
-                    ut.setToken(r.getDato());
-                }
-
-                break;
             case 1:// Login 
 
                 ut.setMail(mail);
@@ -58,6 +49,7 @@ public class VerificaWEB2 {
                     // Imposta il token    
                     System.out.println("Login Effettuato!");
                     ut.setToken(r.getDato());
+                    System.out.println(r.getDato()); // <- Token 
                 } else {
                     System.out.println(r.getDato()); // <- Errore 
                     gandalf = false;
