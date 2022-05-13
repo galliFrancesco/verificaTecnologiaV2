@@ -218,11 +218,16 @@ public class WebService {
     }
 
     static public void getDistanza(String token) throws MalformedURLException, IOException {
-        
+
         // alla fine è come getString l'inizio, perchè deve comunque prendere le tappe
-        
         String URLBase = host_cattedra + "getString.php?token=";
 
+        // Serviranno dopo
+        float lat2 = 0;
+        float lon2 = 0;
+
+        double ris = 0; 
+        
         for (int i = 0; i < count; i++) {// Stampa ogni stringa scritta dall'utente          
             String webRequest = URLBase + token + "&key=" + i;  // imposta la stringa con identificativo
             //System.out.println(webRequest);
@@ -242,30 +247,60 @@ public class WebService {
                 // tutto a posto
 
                 JSONObject jResult = obj.getJSONObject("result");
-                //System.out.println(jResult.getString("key") + i + ": " + jResult.getString("string"))
                 String sResult = jResult.getString("key") + i + ": " + jResult.getString("string");
-                // EX:  "00: 'Erba, Como, Lombardia, Italia,45.80958 9.231242'"
-                
-                int posIniz = sResult.lastIndexOf(","); 
-                System.out.println(posIniz);
-                int posFin = sResult.lastIndexOf("'"); 
-                System.out.println(posFin);
-                
-                // SUBSTRING
-                //public String substring(int startIndex, int endIndex) 
-                String subbato = sResult.substring(posIniz+1, posFin); // <- QUESTA STRINGA CONTIENE LAT E LONG
-                
-                // un altra Substring per prendere i valori?
-                
-                
-                
-            }
-        }
 
+                // EX:  "00: 'Erba, Como, Lombardia, Italia,45.80958 9.231242'"
+                int posIniz = sResult.lastIndexOf(",");
+                int posFin = sResult.lastIndexOf("'");
+
+                // SUBSTRING
+                String subbato = sResult.substring(posIniz + 1, posFin); // <- QUESTA STRINGA CONTIENE LAT E LONG              
+
+                int posSpazio = subbato.indexOf(" ");
+
+                String latS = subbato.substring(0, posSpazio);
+                String lonS = subbato.substring(posSpazio + 1);
+
+                float lat = Float.parseFloat(latS);
+                float lon = Float.parseFloat(lonS);
+                // TUTTO QUESTO SOLO PER PRENDERE I VALORI FLOAT DELLE POSIZIONI 
+
+                // alla fine le coordinate attuali dovranno essere switchate con "lat2" e "lon2"
+                // per fare il calcolo di altro 
+                
+                //  ------ --------
+                // CALCOLO DISTANZA
+                //  ------ --------
+                if(lat2!=0){ // dàproblemi con lo 0 
+                    int earthRadiusKm = 6371;
+
+                    var dLat = degreesToRadians(lat2-lat);
+                    var dLon = degreesToRadians(lon2-lon);
+
+                    lat = degreesToRadians(lat);
+                    lat2 = degreesToRadians(lat2);
+
+                    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat) * Math.cos(lat2); 
+
+                    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                    double ris1 = earthRadiusKm * c;
+
+                    ris += ris1;
+                    //System.out.println(ris);
+                } else {
+                }
+                // Fine ciclo 
+                lat2 = lat; 
+                lon2 = lon; 
+            }
+        }     
+        
         if (count == 0) {
             System.out.println("\n Nessuna tappa");
+        } else {
+            System.out.println("Distanza(KM):"+ris); 
         }
-        
+
         /*
         SOURCE: https://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates
         
@@ -289,7 +324,12 @@ public class WebService {
           }
         
         
-        */
+         */
+    }
+    
+    static private float degreesToRadians(float degrees){
+    
+        return (float) (degrees * Math.PI / 180);
     }
 
     /**
